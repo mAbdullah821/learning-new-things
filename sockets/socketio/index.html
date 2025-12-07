@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nature Chat 🌸</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(
+          to bottom,
+          #87ceeb 0%,
+          #87ceeb 40%,
+          #90ee90 40%,
+          #90ee90 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      @media (max-width: 768px) {
+        body {
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 0;
+        }
+      }
+
+      /* Sky decorations */
+      .sun {
+        position: fixed;
+        top: 30px;
+        right: 50px;
+        width: 80px;
+        height: 80px;
+        background: #ffd700;
+        border-radius: 50%;
+        box-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+        animation: float 6s ease-in-out infinite;
+      }
+
+      .cloud {
+        position: fixed;
+        background: white;
+        border-radius: 50px;
+        opacity: 0.8;
+        animation: drift 20s linear infinite;
+      }
+
+      .cloud:before,
+      .cloud:after {
+        content: "";
+        position: absolute;
+        background: white;
+        border-radius: 50px;
+      }
+
+      .cloud1 {
+        width: 100px;
+        height: 40px;
+        top: 60px;
+        left: -120px;
+      }
+
+      .cloud1:before {
+        width: 50px;
+        height: 50px;
+        top: -25px;
+        left: 10px;
+      }
+
+      .cloud1:after {
+        width: 60px;
+        height: 60px;
+        top: -35px;
+        right: 10px;
+      }
+
+      .cloud2 {
+        width: 120px;
+        height: 50px;
+        top: 100px;
+        left: -150px;
+        animation-delay: -5s;
+      }
+
+      .cloud2:before {
+        width: 60px;
+        height: 60px;
+        top: -30px;
+        left: 15px;
+      }
+
+      .cloud2:after {
+        width: 70px;
+        height: 70px;
+        top: -40px;
+        right: 15px;
+      }
+
+      .cloud3 {
+        width: 90px;
+        height: 35px;
+        top: 140px;
+        left: -110px;
+        animation-delay: -10s;
+      }
+
+      .cloud3:before {
+        width: 45px;
+        height: 45px;
+        top: -22px;
+        left: 8px;
+      }
+
+      .cloud3:after {
+        width: 55px;
+        height: 55px;
+        top: -30px;
+        right: 8px;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translateX(0);
+        }
+        100% {
+          transform: translateX(calc(100vw + 200px));
+        }
+      }
+
+      /* Chat container */
+      .chat-container {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 500px;
+        height: 600px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        position: relative;
+        z-index: 10;
+      }
+
+      .chat-header {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        flex-shrink: 0;
+      }
+
+      .chat-header h2 {
+        font-size: 24px;
+        font-weight: 600;
+        margin: 0;
+      }
+
+      .chat-header::after {
+        content: "🌸🌻🌺";
+        display: block;
+        margin-top: 8px;
+        font-size: 20px;
+      }
+
+      .connection-status {
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+        opacity: 0.9;
+      }
+
+      .status-indicator {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #fff;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .status-indicator.connected {
+        background: #4caf50;
+        box-shadow: 0 0 8px rgba(76, 175, 80, 0.8);
+      }
+
+      .status-indicator.disconnected {
+        background: #f44336;
+        box-shadow: 0 0 8px rgba(244, 67, 54, 0.8);
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.5;
+        }
+      }
+
+      .sending-indicator {
+        display: none;
+        font-size: 12px;
+        color: #666;
+        font-style: italic;
+        margin-top: 4px;
+      }
+
+      .sending-indicator.active {
+        display: block;
+      }
+
+      .message-status {
+        font-size: 10px;
+        opacity: 0.7;
+        margin-top: 4px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .message-status.sent {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .message-status.received {
+        color: #666;
+      }
+
+      .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        background: #f8f9fa;
+        min-height: 0;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .messages-container::-webkit-scrollbar {
+        width: 8px;
+      }
+
+      .messages-container::-webkit-scrollbar-track {
+        background: #e9ecef;
+        border-radius: 10px;
+      }
+
+      .messages-container::-webkit-scrollbar-thumb {
+        background: #4caf50;
+        border-radius: 10px;
+      }
+
+      #messages {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      #messages li {
+        padding: 12px 16px;
+        border-radius: 18px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        max-width: 80%;
+        word-wrap: break-word;
+        word-break: break-word;
+        animation: slideIn 0.3s ease-out;
+        position: relative;
+      }
+
+      /* Sent messages (your own) */
+      #messages li.sent {
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        color: white;
+        margin-left: auto;
+        border-left: none;
+        border-right: 4px solid #2e7d32;
+      }
+
+      /* Received messages (from others) */
+      #messages li.received {
+        background: white;
+        color: #333;
+        margin-right: auto;
+        border-left: 4px solid #4caf50;
+      }
+
+      /* Message user ID display */
+      .message-user-id {
+        font-size: 11px;
+        opacity: 0.7;
+        margin-bottom: 4px;
+        font-weight: 600;
+      }
+
+      .sent .message-user-id {
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .received .message-user-id {
+        color: #666;
+      }
+
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .input-container {
+        padding: 20px;
+        background: white;
+        display: flex;
+        gap: 10px;
+        border-top: 2px solid #e9ecef;
+        flex-shrink: 0;
+      }
+
+      #input {
+        flex: 1;
+        padding: 12px 16px;
+        border: 2px solid #4caf50;
+        border-radius: 25px;
+        font-size: 16px;
+        outline: none;
+        transition: all 0.3s ease;
+        min-width: 0;
+      }
+
+      #input:focus {
+        border-color: #45a049;
+        box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+      }
+
+      button {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+        color: white;
+        border: none;
+        border-radius: 25px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+        min-width: 70px;
+        flex-shrink: 0;
+      }
+
+      button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+
+      /* Flowers decoration */
+      .flower {
+        position: fixed;
+        font-size: 30px;
+        opacity: 0.6;
+        z-index: 5;
+        animation: sway 4s ease-in-out infinite;
+        pointer-events: none;
+      }
+
+      @keyframes sway {
+        0%,
+        100% {
+          transform: rotate(-5deg);
+        }
+        50% {
+          transform: rotate(5deg);
+        }
+      }
+
+      /* Tablet and smaller screens */
+      @media (max-width: 768px) {
+        .chat-container {
+          max-width: 100%;
+          height: calc(100vh - 20px);
+          max-height: calc(100vh - 20px);
+        }
+
+        .chat-header {
+          padding: 15px;
+        }
+
+        .chat-header h2 {
+          font-size: 20px;
+        }
+
+        .messages-container {
+          padding: 15px;
+        }
+
+        #messages li {
+          max-width: 75%;
+        }
+
+        .input-container {
+          padding: 15px;
+        }
+
+        .sun {
+          width: 60px;
+          height: 60px;
+          top: 20px;
+          right: 30px;
+        }
+
+        .cloud1 {
+          width: 80px;
+          height: 32px;
+        }
+
+        .cloud2 {
+          width: 100px;
+          height: 40px;
+        }
+
+        .cloud3 {
+          width: 70px;
+          height: 28px;
+        }
+
+        .flower {
+          font-size: 24px;
+        }
+      }
+
+      /* Mobile phones */
+      @media (max-width: 480px) {
+        .chat-container {
+          height: 100vh;
+          max-height: 100vh;
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        .chat-header {
+          padding: 12px 15px;
+        }
+
+        .chat-header h2 {
+          font-size: 18px;
+        }
+
+        .connection-status {
+          top: 8px;
+          right: 10px;
+          font-size: 10px;
+        }
+
+        .status-indicator {
+          width: 6px;
+          height: 6px;
+        }
+
+        .chat-header::after {
+          font-size: 16px;
+          margin-top: 5px;
+        }
+
+        .messages-container {
+          padding: 12px 15px;
+        }
+
+        #messages {
+          gap: 10px;
+        }
+
+        #messages li {
+          padding: 10px 14px;
+          font-size: 14px;
+          max-width: 85%;
+        }
+
+        #messages li.received {
+          border-left-width: 3px;
+        }
+
+        #messages li.sent {
+          border-right-width: 3px;
+        }
+
+        .message-user-id {
+          font-size: 10px;
+        }
+
+        .input-container {
+          padding: 12px 15px;
+          gap: 8px;
+        }
+
+        #input {
+          padding: 10px 14px;
+          font-size: 14px;
+        }
+
+        button {
+          padding: 10px 20px;
+          font-size: 14px;
+          min-width: 60px;
+        }
+
+        .sun {
+          width: 50px;
+          height: 50px;
+          top: 15px;
+          right: 15px;
+          box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        }
+
+        .cloud {
+          opacity: 0.6;
+        }
+
+        .cloud1 {
+          width: 60px;
+          height: 24px;
+          top: 50px;
+        }
+
+        .cloud1:before {
+          width: 35px;
+          height: 35px;
+          top: -18px;
+        }
+
+        .cloud1:after {
+          width: 40px;
+          height: 40px;
+          top: -25px;
+        }
+
+        .cloud2 {
+          width: 80px;
+          height: 32px;
+          top: 80px;
+        }
+
+        .cloud2:before {
+          width: 45px;
+          height: 45px;
+          top: -22px;
+        }
+
+        .cloud2:after {
+          width: 50px;
+          height: 50px;
+          top: -30px;
+        }
+
+        .cloud3 {
+          width: 55px;
+          height: 22px;
+          top: 110px;
+        }
+
+        .cloud3:before {
+          width: 30px;
+          height: 30px;
+          top: -15px;
+        }
+
+        .cloud3:after {
+          width: 35px;
+          height: 35px;
+          top: -20px;
+        }
+
+        .flower {
+          font-size: 20px;
+          opacity: 0.5;
+        }
+      }
+
+      /* Small mobile phones */
+      @media (max-width: 360px) {
+        .chat-header h2 {
+          font-size: 16px;
+        }
+
+        #messages li {
+          max-width: 90%;
+          font-size: 13px;
+          padding: 8px 12px;
+        }
+
+        #input {
+          font-size: 13px;
+          padding: 8px 12px;
+        }
+
+        button {
+          padding: 8px 16px;
+          font-size: 13px;
+          min-width: 55px;
+        }
+
+        .sun {
+          width: 40px;
+          height: 40px;
+        }
+      }
+
+      /* Landscape orientation on mobile */
+      @media (max-height: 500px) and (orientation: landscape) {
+        .chat-container {
+          height: 100vh;
+          max-height: 100vh;
+        }
+
+        .chat-header {
+          padding: 10px 15px;
+        }
+
+        .chat-header h2 {
+          font-size: 16px;
+        }
+
+        .chat-header::after {
+          display: none;
+        }
+
+        .messages-container {
+          padding: 10px 15px;
+        }
+
+        .input-container {
+          padding: 10px 15px;
+        }
+
+        .sun {
+          width: 40px;
+          height: 40px;
+          top: 10px;
+          right: 10px;
+        }
+
+        .flower {
+          display: none;
+        }
+      }
+
+      /* Large screens */
+      @media (min-width: 1200px) {
+        .chat-container {
+          max-width: 600px;
+          height: 700px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sky decorations -->
+    <div class="sun"></div>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="cloud cloud3"></div>
+
+    <!-- Flowers container - will be populated by JavaScript -->
+    <div id="flowers-container"></div>
+
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="connection-status" id="connection-status">
+          <div
+            class="status-indicator disconnected"
+            id="status-indicator"
+          ></div>
+          <span id="status-text">Connecting...</span>
+        </div>
+        <h2>Nature Chat</h2>
+      </div>
+
+      <div class="messages-container">
+        <ul id="messages"></ul>
+      </div>
+
+      <div class="input-container">
+        <input
+          id="input"
+          type="text"
+          autocomplete="off"
+          placeholder="Type your message..."
+        />
+        <button id="send-button" onclick="sendMessage()">Send</button>
+      </div>
+    </div>
+
+    <!-- Load the socket.io client library -->
+    <!-- Try to load from server first, fallback to CDN if needed -->
+    <script
+      src="/socket.io/socket.io.js"
+      onerror="
+        console.warn('Failed to load Socket.IO from server, trying CDN...');
+        const script = document.createElement('script');
+        script.src = 'https://cdn.socket.io/4.8.1/socket.io.min.js';
+        script.onerror = function() {
+          console.error('Failed to load Socket.IO from CDN as well');
+        };
+        document.head.appendChild(script);
+      "
+    ></script>
+    <script>
+      // Wait for Socket.IO library to load before initializing
+      let socketIOLoadAttempts = 0;
+      const maxAttempts = 50; // 5 seconds max wait
+
+      function waitForSocketIO(callback) {
+        socketIOLoadAttempts++;
+        if (typeof io !== "undefined") {
+          callback();
+        } else if (socketIOLoadAttempts < maxAttempts) {
+          setTimeout(() => waitForSocketIO(callback), 100);
+        } else {
+          console.error(
+            "Socket.IO library failed to load after maximum attempts"
+          );
+          if (typeof updateStatus !== "undefined") {
+            updateStatus("disconnected", "Library Load Error");
+          }
+        }
+      }
+
+      // Generate random flowers
+      function generateRandomFlowers() {
+        const container = document.getElementById("flowers-container");
+        const types = [
+          "🌺",
+          "🌻",
+          "🌸",
+          "🌷",
+          "🌹",
+          "🌼",
+          "🌾",
+          "🌿",
+          "🍀",
+          "🌱",
+        ];
+        const isMobile = window.innerWidth <= 480;
+        const isTablet = window.innerWidth <= 768;
+        const count =
+          Math.floor(Math.random() * 10) + (isMobile ? 15 : isTablet ? 20 : 25);
+        const baseSize = isMobile ? 20 : isTablet ? 25 : 30;
+        const greenStart = window.innerHeight * 0.4;
+        const greenHeight = window.innerHeight * 0.6;
+
+        container.innerHTML = "";
+
+        for (let i = 0; i < count; i++) {
+          const flower = document.createElement("div");
+          flower.className = "flower";
+          flower.textContent = types[Math.floor(Math.random() * types.length)];
+          flower.style.left = Math.random() * 96 + 2 + "%";
+          flower.style.top =
+            ((Math.random() * greenHeight + greenStart) / window.innerHeight) *
+              100 +
+            "%";
+          flower.style.animationDelay = Math.random() * 4 + "s";
+          flower.style.fontSize = baseSize * (Math.random() * 0.4 + 0.8) + "px";
+          flower.style.opacity = (Math.random() * 0.3 + 0.5).toFixed(2);
+          container.appendChild(flower);
+        }
+      }
+
+      window.addEventListener("load", generateRandomFlowers);
+      let resizeTimeout;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(generateRandomFlowers, 300);
+      });
+
+      // Socket connection - wait for page to fully load
+      let socket;
+      let currentUserId = null;
+
+      // Update status function - must be defined globally
+      function updateStatus(status, text) {
+        const indicator = document.getElementById("status-indicator");
+        const statusText = document.getElementById("status-text");
+        if (indicator) {
+          indicator.className = "status-indicator " + status;
+        }
+        if (statusText) {
+          statusText.textContent = text;
+        }
+      }
+
+      function initializeSocket() {
+        if (typeof io === "undefined") {
+          console.error("Socket.IO not available");
+          updateStatus("disconnected", "Library Error");
+          return;
+        }
+
+        // Connect to the server - use current origin if served by Express, otherwise use explicit URL
+        const serverUrl =
+          window.location.protocol === "file:"
+            ? "http://localhost:3025"
+            : window.location.origin;
+
+        console.log("Attempting to connect to:", serverUrl);
+
+        socket = io(serverUrl, {
+          transports: ["websocket", "polling"],
+          reconnection: true,
+          reconnectionDelay: 1000,
+          reconnectionAttempts: Infinity,
+          timeout: 20000,
+        });
+
+        socket.on("connect", () => {
+          console.log("Connected to server:", socket.id);
+          updateStatus("connected", "Connected");
+        });
+        socket.on("disconnect", (reason) => {
+          console.log("Disconnected from server:", reason);
+          updateStatus("disconnected", "Disconnected");
+        });
+        socket.on("connect_error", (error) => {
+          console.error("Connection error:", error);
+          updateStatus(
+            "disconnected",
+            "Connection Error: " + (error.message || "Unknown")
+          );
+        });
+        socket.on("user id", (id) => {
+          currentUserId = id;
+          console.log("Received user ID:", id);
+        });
+
+        // Set up message listener
+        socket.on("chat message", (data) => {
+          if (!data || !data.message || !data.userId) return;
+
+          const item = document.createElement("li");
+          const isSent = data.userId === currentUserId;
+          item.className = isSent ? "sent" : "received";
+
+          const userId = document.createElement("div");
+          userId.className = "message-user-id";
+          userId.textContent = isSent
+            ? "You"
+            : `User ${data.userId.substring(0, 8)}`;
+
+          const message = document.createElement("div");
+          message.textContent = data.message;
+
+          item.appendChild(userId);
+          item.appendChild(message);
+
+          if (isSent) {
+            const status = document.createElement("div");
+            status.className = "message-status sent";
+            status.innerHTML = "✓ Sent";
+            item.appendChild(status);
+          }
+
+          document.getElementById("messages").appendChild(item);
+          document.querySelector(".messages-container").scrollTop =
+            document.querySelector(".messages-container").scrollHeight;
+        });
+      }
+
+      // Initialize socket when page loads
+      window.addEventListener("DOMContentLoaded", () => {
+        // Check if page is being opened as file:// - warn user
+        if (window.location.protocol === "file:") {
+          console.warn(
+            "⚠️ Page opened as file:// - Socket.IO library may not load."
+          );
+          console.warn("Please access the page through: http://localhost:3025");
+          updateStatus("disconnected", "Please use http://localhost:3025");
+        }
+
+        waitForSocketIO(() => {
+          console.log("Socket.IO library loaded, initializing connection...");
+          initializeSocket();
+        });
+      });
+
+      // Send message
+      function sendMessage() {
+        if (!socket || !socket.connected) {
+          console.warn("Socket not connected");
+          return;
+        }
+        const input = document.getElementById("input");
+        const text = input.value.trim();
+        if (!text || !currentUserId) return;
+
+        socket.emit("chat message", text);
+        input.value = "";
+      }
+
+      // Event listeners
+      document.getElementById("input").addEventListener("keypress", (e) => {
+        if (e.key === "Enter") sendMessage();
+      });
+      document
+        .getElementById("send-button")
+        .addEventListener("click", sendMessage);
+    </script>
+  </body>
+</html>
