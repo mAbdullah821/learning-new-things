@@ -20,6 +20,10 @@ A collection of practical examples demonstrating core Event-Driven Architecture 
 
 **Resequencer Pattern** - Handles out-of-order message processing using in-memory buffering and sequence number tracking.
 
+### [SAGA-pattern](./SAGA-pattern/README.md)
+
+**Saga Choreography** - Implements distributed transactions using the Saga pattern with choreography. Features Pivot Transactions, Compensation (Rollback), Forward Recovery, and Idempotency.
+
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -48,6 +52,8 @@ Each folder contains its own example. Navigate to the desired folder and follow 
 - **Concurrency**: Optimistic locking, version control
 - **Idempotency**: Duplicate detection, idempotent operations
 - **Message Ordering**: Resequencing, sequence tracking
+- **Distributed Transactions**: Saga Pattern (Choreography)
+- **Error Handling**: Compensation, Forward Recovery, Pivot Transactions
 
 ## 📖 Learn More
 
