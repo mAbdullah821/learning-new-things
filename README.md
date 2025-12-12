@@ -22,7 +22,7 @@ This repository contains multiple projects, each residing in its designated dire
   - **[dead-letter-trick](./event-driven-architecture/dead-letter-trick/README.md)**: Dead Letter Exchange (DLX) Pattern - Delayed message processing and message resequencing using the Dead Letter Exchange trick
   - **[event-sourcing-CQRS](./event-driven-architecture/event-sourcing-CQRS/README.md)**: Event Sourcing & CQRS - Complete implementation with snapshot optimization, optimistic concurrency control, and idempotency handling
   - **[resequencer-pattern](./event-driven-architecture/resequencer-pattern/README.md)**: Resequencer Pattern - Handles out-of-order message processing using in-memory buffering and sequence number tracking
-  - **[SAGA-pattern](./event-driven-architecture/SAGA-pattern/README.md)**: Saga Choreography - Implements distributed transactions using the Saga pattern with choreography. Features Pivot Transactions, Compensation (Rollback), Forward Recovery, and Idempotency.
+  - **[SAGA-pattern](./event-driven-architecture/SAGA-pattern/README.md)**: SAGA Pattern - Comprehensive implementation of distributed transactions using the SAGA pattern. Includes both Choreography-based (event-driven) and Orchestration-based (FSM) approaches. Features Pivot Transactions, Compensation (Rollback), Forward Recovery, Idempotency, and State Persistence.
 - Navigate to the `event-driven-architecture` directory to explore the README.md file for detailed information about each pattern and how to run the examples.
 
 ### 4. [Redis Project](./redis/README.md)

@@ -22,7 +22,7 @@ A collection of practical examples demonstrating core Event-Driven Architecture 
 
 ### [SAGA-pattern](./SAGA-pattern/README.md)
 
-**Saga Choreography** - Implements distributed transactions using the Saga pattern with choreography. Features Pivot Transactions, Compensation (Rollback), Forward Recovery, and Idempotency.
+**SAGA Pattern** - Comprehensive implementation of distributed transactions using the SAGA pattern. Includes both Choreography-based (event-driven) and Orchestration-based (FSM) approaches. Features Pivot Transactions, Compensation (Rollback), Forward Recovery, Idempotency, and State Persistence.
 
 ## 🚀 Getting Started
 
@@ -52,8 +52,9 @@ Each folder contains its own example. Navigate to the desired folder and follow 
 - **Concurrency**: Optimistic locking, version control
 - **Idempotency**: Duplicate detection, idempotent operations
 - **Message Ordering**: Resequencing, sequence tracking
-- **Distributed Transactions**: Saga Pattern (Choreography)
+- **Distributed Transactions**: SAGA Pattern (Choreography & Orchestration)
 - **Error Handling**: Compensation, Forward Recovery, Pivot Transactions
+- **State Management**: Finite State Machines, State Persistence, Crash Recovery
 
 ## 📖 Learn More
 
