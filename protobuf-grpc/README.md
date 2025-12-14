@@ -308,9 +308,3 @@ client.GetUser({ id: "999" }, (error, response) => {
 - Explore **gRPC-Web** for browser clients
 - Study **Protobuf versioning** and backward compatibility
 - Implement authentication and authorization
-
-## Resources
-
-- [gRPC Official Documentation](https://grpc.io/docs/)
-- [Protocol Buffers Guide](https://developers.google.com/protocol-buffers)
-- [gRPC Node.js Tutorial](https://grpc.io/docs/languages/node/)
