@@ -4,17 +4,13 @@ This repository contains multiple projects, each residing in its designated dire
 
 ## Projects
 
-### 1. [Protobuf Project](./protobuf/README.md)
+### 1. [Protobuf & gRPC Project](./protobuf-grpc/README.md)
 
-- **Directory:** `protobuf`
-- **Description:** This project focuses on Protocol Buffers (Protobuf). Inside the directory, you'll find a detailed README.md file providing a tutorial about the `protobuf` technology, and how to use it.
+- **Directory:** `protobuf-grpc`
+- **Description:** A simple, beginner-friendly project demonstrating Protocol Buffers (Protobuf) and gRPC with Node.js. This project combines both technologies to show how to build high-performance microservices communication. It includes detailed comments explaining key concepts, making it perfect for learning purposes. The project demonstrates unary RPC (request-response) and server streaming patterns.
+- Navigate to the `protobuf-grpc` directory to explore the README.md file for detailed information, concepts explanation, and usage examples.
 
-### 2. [gRPC Project](./gRPC/README.md)
-
-- **Directory:** `gRPC`
-- **Description:** The gRPC project is centered around gRPC technology. Navigate to the `gRPC` directory to explore the README.md file, which offers insights into the project's purpose, functionality, and a tutorial on using gRPC.
-
-### 3. [Event-Driven Architecture Project](./event-driven-architecture/README.md)
+### 2. [Event-Driven Architecture Project](./event-driven-architecture/README.md)
 
 - **Directory:** `event-driven-architecture`
 - **Description:** A collection of practical examples demonstrating core Event-Driven Architecture patterns and RabbitMQ concepts. This project includes multiple sub-projects covering different EDA patterns:
@@ -25,13 +21,13 @@ This repository contains multiple projects, each residing in its designated dire
   - **[SAGA-pattern](./event-driven-architecture/SAGA-pattern/README.md)**: SAGA Pattern - Comprehensive implementation of distributed transactions using the SAGA pattern. Includes both Choreography-based (event-driven) and Orchestration-based (FSM) approaches. Features Pivot Transactions, Compensation (Rollback), Forward Recovery, Idempotency, and State Persistence.
 - Navigate to the `event-driven-architecture` directory to explore the README.md file for detailed information about each pattern and how to run the examples.
 
-### 4. [Redis Project](./redis/README.md)
+### 3. [Redis Project](./redis/README.md)
 
 - **Directory:** `redis`
 - **Description:** A simple demonstration of Redis Pub/Sub (Publish/Subscribe) messaging pattern. This project shows how to use Redis for real-time messaging between publishers and subscribers, including examples of channel-based messaging and pattern-based subscriptions.
 - Navigate to the `redis` directory to explore the README.md file for detailed information and usage examples.
 
-### 5. [Sockets Project](./sockets/README.md)
+### 4. [Sockets Project](./sockets/README.md)
 
 - **Directory:** `sockets`
 - **Description:** A collection of socket programming examples demonstrating both native TCP sockets and WebSocket-based real-time communication. Includes:

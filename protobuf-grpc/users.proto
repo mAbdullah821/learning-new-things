@@ -1,0 +1,53 @@
+syntax = "proto3"; // Protocol Buffers version 3 - the latest version
+
+// Package declaration: groups related services and messages together
+// This helps avoid naming conflicts when you have multiple proto files
+package userService;
+
+// ============================================================================
+// SERVICE DEFINITION (The API Contract)
+// ============================================================================
+// A service defines the RPC methods (functions) that clients can call
+// Think of it like an interface in TypeScript or a class with method signatures
+service User {
+  // Unary RPC: Classic request-response pattern (like REST)
+  // Client sends 1 request, Server returns 1 response
+  // This is the simplest and most common pattern
+  rpc GetUser (UserRequest) returns (UserResponse);
+  
+  // Server Streaming RPC: Server sends multiple responses to one request
+  // Useful for: live updates, notifications, real-time data feeds
+  // Example: Stock prices, chat messages, live sports scores
+  // This method streams all users, sending one complete user object per chunk
+  rpc GetUsersStream (Empty) returns (stream UserResponse);
+}
+
+// ============================================================================
+// MESSAGE DEFINITIONS (The Data Structures)
+// ============================================================================
+// Messages are like structs or classes - they define the shape of your data
+// These messages are serialized to binary format (much smaller than JSON)
+
+// Request message for getting a user
+message UserRequest {
+  // Field tags (1, 2, 3...) are CRITICAL - they're used in binary encoding
+  // NEVER change a tag number once it's in production!
+  // If you need to remove a field, mark it as "reserved" to prevent reuse
+  string id = 1; // Tag 1 = user ID (string type)
+}
+
+// Response message containing user data
+message UserResponse {
+  string id = 1;        // Tag 1 = user ID
+  string name = 2;      // Tag 2 = user name
+  int32 age = 3;        // Tag 3 = user age (32-bit integer)
+  repeated string hobbies = 4; // Tag 4 = array of hobbies
+  // "repeated" means this field can appear multiple times (like an array)
+  // In the binary format, it's encoded as multiple entries with the same tag
+}
+
+// Empty message for requests that don't need parameters
+message Empty {
+  // No fields needed - just a placeholder for requests without parameters
+}
+
